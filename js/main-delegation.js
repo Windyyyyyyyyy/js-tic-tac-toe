@@ -1,6 +1,7 @@
 import {
   getCellElementAtIdx,
   getCellElementList,
+  getCellListElement,
   getCurrentTurnElement,
   getGameStatusElement,
   getReplayButton,
@@ -137,12 +138,23 @@ const handleClickReplayBtn = () => {
 };
 
 const initBindClickAllCells = () => {
+  //set index for each li element
   const cellList = getCellElementList();
-  cellList.forEach((cell, index) => {
-    cell.addEventListener('click', () => {
-      handleClick(cell, index);
+  if (cellList) {
+    cellList.forEach((cell, index) => {
+      cell.dataset.idx = index;
     });
-  });
+  }
+
+  //attach click event for ul element
+  const cellListElement = getCellListElement();
+  if (cellListElement) {
+    cellListElement.addEventListener('click', (event) => {
+      if (event.target.tagName !== 'LI') return;
+      const index = Number(event.target.dataset.idx);
+      handleClick(event.target, index);
+    });
+  }
 };
 
 const initClickReplayButton = () => {
